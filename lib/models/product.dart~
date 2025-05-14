@@ -1,0 +1,17 @@
+class Product {
+  String pName;
+  String pPrice;
+  String pLocation;
+  String pDescription;
+  String pCategory;
+  String pId;
+  int? pQuantity;
+  Product(
+      { this.pQuantity,
+      required this.pId,
+      required this.pName,
+      required this.pCategory,
+      required this.pDescription,
+      required this.pLocation,
+      required this.pPrice});
+}
