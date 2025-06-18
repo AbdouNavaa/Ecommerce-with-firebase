@@ -1,82 +1,119 @@
-import 'package:flutter_with_firebase/provider/favorite.dart';
-import 'package:flutter_with_firebase/screens/user/FavoritesScreen.dart';
-
-import 'models/product.dart';
-import 'provider/adminMode.dart';
-import 'provider/cartItem.dart';
-import 'provider/modelHud.dart';
-import 'screens/admin/OrdersScreen.dart';
-import 'screens/admin/addProduct.dart';
-import 'screens/admin/adminHome.dart';
-import 'screens/admin/editProduct.dart';
-import 'screens/admin/manageProduct.dart';
-import 'screens/admin/order_details.dart';
-import 'screens/login_screen.dart';
-import 'screens/signup_screen.dart';
-import 'screens/user/CartScreen.dart';
-import 'screens/user/homePage.dart';
-import 'screens/user/productInfo.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import 'constants.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'firebase_options.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_with_firebase/features/auth/presentation/pages/signup_screen.dart';
+import 'package:flutter_with_firebase/features/home/homePage.dart';
+import 'package:flutter_with_firebase/features/product/presentation/pages/FavoritesScreen.dart';
+import 'package:flutter_with_firebase/features/search/pages/search.dart';
+import 'package:flutter_with_firebase/features/admin/presentation/pages/addProduct.dart';
+import 'package:flutter_with_firebase/features/admin/presentation/pages/adminHome.dart';
+import 'package:flutter_with_firebase/features/admin/presentation/pages/editProduct.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'core/configs/theme/app_theme.dart';
+import 'core/configs/theme/theme_cubit.dart';
+import 'core/firebase_options.dart';
+import 'core/localization/app_localization.dart';
+import 'features/product/domain/usecases/get_products.dart';
+import 'features/product/presentation/cubit/get_porducts_cubit.dart';
+import 'service_locator.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(MyApp());
+  await initializeDependencies();
+  runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  bool isUserLoggedIn = false;
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+  static void setLocale(BuildContext context, Locale newLocale) async {
+    _MyAppState? state = context.findAncestorStateOfType<_MyAppState>();
+    state?.setLocale(newLocale);
+
+    // ✅ On sauvegarde le choix de la langue
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('locale', newLocale.languageCode);
+  }
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Locale? _locale;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLocale();
+  }
+
+  void _loadLocale() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('locale');
+    if (languageCode != null) {
+      setState(() {
+        _locale = Locale(languageCode);
+      });
+    }
+  }
+
+  void setLocale(Locale newLocale) {
+    setState(() {
+      _locale = newLocale;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<SharedPreferences>(
-      future: SharedPreferences.getInstance(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => ThemeCubit()),
+        BlocProvider(
+          create:
+              (context) => ProductCubit(GetProductsUseCase())..loadProducts(),
+        ),
+      ],
+      child: BlocBuilder<ThemeCubit, ThemeMode>(
+        builder: (context, themeMode) {
           return MaterialApp(
-            home: Scaffold(body: Center(child: Text('Loading....'))),
-          );
-        } else {
-          isUserLoggedIn = snapshot.data?.getBool(kKeepMeLoggedIn) ?? false;
-          return MultiProvider(
-            providers: [
-              ChangeNotifierProvider<ModelHud>(create: (context) => ModelHud()),
-              ChangeNotifierProvider<CartItem>(create: (context) => CartItem()),
-              ChangeNotifierProvider<Favorites>(
-                create: (context) => Favorites(),
-              ),
-              ChangeNotifierProvider<AdminMode>(
-                create: (context) => AdminMode(),
-              ),
+            // themeMode: ThemeMode.system,
+            locale: _locale,
+            supportedLocales: const [Locale('en', ''), Locale('ar', '')],
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
             ],
-            child: MaterialApp(
-              debugShowCheckedModeBanner: false,
-              initialRoute: isUserLoggedIn ? HomePage.id : LoginScreen.id,
-              routes: {
-                OrderDetails.id: (context) => OrderDetails(),
-                OrdersScreen.id: (context) => OrdersScreen(),
-                CartScreen.id: (context) => CartScreen(),
-                FavoritesScreen.id: (context) => FavoritesScreen(),
-                // ProductInfo.id: (context) => ProductInfo(),
-                EditProduct.id: (context) => EditProduct(),
-                ManageProducts.id: (context) => ManageProducts(),
-                LoginScreen.id: (context) => LoginScreen(),
-                SignupScreen.id: (context) => SignupScreen(),
-                HomePage.id: (context) => HomePage(),
-                AdminHome.id: (context) => AdminHome(),
-                AddProduct.id: (context) => AddProduct(),
-              },
-            ),
+            localeResolutionCallback: (locale, supportedLocales) {
+              if (locale == null) return supportedLocales.first;
+              for (var supportedLocale in supportedLocales) {
+                if (supportedLocale.languageCode == locale.languageCode) {
+                  return supportedLocale;
+                }
+              }
+              return supportedLocales.first;
+            },
+            themeMode: themeMode,
+            theme: AppTheme.appThemeLight,
+            darkTheme: AppTheme.appThemeDark,
+            debugShowCheckedModeBanner: false,
+            // home: AdminHome(),
+            home: HomePage(),
+            routes: {
+              MyFavoritesPage.id: (context) => MyFavoritesPage(),
+              EditProduct.id: (context) => EditProduct(),
+              SearchPage.id: (context) => SearchPage(),
+              SignupScreen.id: (context) => SignupScreen(),
+              HomePage.id: (context) => HomePage(),
+              AdminHome.id: (context) => AdminHome(),
+              AddProduct.id: (context) => AddProduct(),
+            },
           );
-        }
-      },
+        },
+      ),
     );
   }
 }

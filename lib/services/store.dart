@@ -1,4 +1,6 @@
-import '../constants.dart';
+import 'package:flutter_with_firebase/features/product/domain/entities/product.dart';
+
+import '../core/constants.dart';
 import '../models/product.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -39,7 +41,7 @@ class Store {
     _firestore.collection(kProductsCollection).doc(documentId).update(data);
   }
 
-  storeOrders(data, List<Product> products) {
+  storeOrders(data, List<ProductEntity> products) {
     var documentRef = _firestore.collection(kOrders).doc();
     documentRef.set(data);
     for (var product in products) {

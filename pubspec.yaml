@@ -45,6 +45,15 @@ dependencies:
   flutter_svg: ^2.1.0
   ionicons: ^0.2.2
 
+  flutter_bloc:
+  dartz:
+  get_it:
+  line_awesome_flutter: ^3.0.1
+  equatable: ^2.0.7
+  url_launcher: ^6.3.1
+  flutter_localizations:
+    sdk: flutter
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -73,7 +82,10 @@ flutter:
     - images/trousers/
     - images/shoes/
     - images/t-shirts/
-
+    - images/vectors/
+    - images/
+    - fonts/
+    - images/assets/lang/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
