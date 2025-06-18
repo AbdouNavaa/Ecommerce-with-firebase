@@ -21,7 +21,6 @@ class AddProduct extends StatelessWidget {
   Widget build(BuildContext context) {
     double width_size = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: kBnbColorAccentDark,
       appBar: AppBar(
         backgroundColor: kBnbColorAccentDark,
         title: Text(
