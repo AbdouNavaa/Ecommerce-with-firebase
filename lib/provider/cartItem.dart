@@ -1,25 +1,27 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_with_firebase/constants.dart';
+import 'package:flutter_with_firebase/core/constants.dart';
+import 'package:flutter_with_firebase/features/product/domain/entities/product.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../models/product.dart';
 import 'dart:convert';
 
+import '../features/product/data/models/product.dart';
+
 class CartItem extends ChangeNotifier {
-  List<Product> products = [];
+  List<ProductEntity> products = [];
 
   CartItem() {
     _loadCartItem(); // Load CartItem when the class is instantiated
   }
 
   /// 🔄 Add product to CartItem
-  addProduct(Product product) async {
+  addProduct(ProductEntity product) async {
     products.add(product);
     await _saveCartItem();
     notifyListeners();
   }
 
   /// ❌ Remove product from CartItem
-  deleteProduct(Product product) async {
+  deleteProduct(ProductEntity product) async {
     products.removeWhere((item) => item.pId == product.pId);
     await _saveCartItem();
     notifyListeners();
@@ -29,7 +31,9 @@ class CartItem extends ChangeNotifier {
   Future<void> _saveCartItem() async {
     final prefs = await SharedPreferences.getInstance();
     List<String> productList =
-        products.map((product) => jsonEncode(product.toJson())).toList();
+        products
+            .map((product) => jsonEncode(product.toModel().toJson()))
+            .toList();
     await prefs.setStringList(kCartItems, productList);
   }
 
@@ -38,10 +42,22 @@ class CartItem extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     final List<String>? productList = prefs.getStringList(kCartItems);
     if (productList != null) {
+      // products = productList.map((product) => ProductModel.fromJson(jsonDecode(product))).toList();
+
+      // Décoder chaque produit et le convertir en ProductEntity
       products =
-          productList
-              .map((product) => Product.fromJson(jsonDecode(product)))
-              .toList();
+          productList.map((product) {
+            final model = ProductModel.fromJson(jsonDecode(product));
+            return ProductEntity(
+              pId: model.pId,
+              pCategory: model.pCategory,
+              pDescription: model.pDescription,
+              pLocation: model.pLocation,
+              pName: model.pName,
+              pPrice: model.pPrice,
+              pQuantity: model.pQuantity,
+            );
+          }).toList();
       notifyListeners();
     }
   }

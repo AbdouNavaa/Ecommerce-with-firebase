@@ -1,0 +1,38 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_with_firebase/core/localization/app_localization.dart';
+import '../../../core/constants.dart';
+import '../../../core/resources/app_strings.dart';
+import '../../order/domain/entities/product_ordered.dart';
+import '../widgets/product_ordered_card.dart';
+import '../../../common/widgets/appbar/app_bar.dart';
+
+class OrderItemsPage extends StatelessWidget {
+  final List<ProductOrderedEntity> products;
+  const OrderItemsPage({required this.products, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: BasicAppbar(
+        title: Text(
+          context.tr(AppStrings.orderItems),
+          style: TextStyle(
+            color: isDark(context) ? Colors.white : Colors.black,
+          ),
+        ),
+      ),
+      body: _products(),
+    );
+  }
+
+  Widget _products() {
+    return ListView.separated(
+      padding: const EdgeInsets.all(16),
+      itemBuilder: (context, index) {
+        return OrderItemCard(productOrderedEntity: products[index]);
+      },
+      separatorBuilder: (context, index) => const SizedBox(height: 10),
+      itemCount: products.length,
+    );
+  }
+}
