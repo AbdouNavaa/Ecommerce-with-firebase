@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 
-import '../../../core/configs/theme/app_colors.dart';
 import '../../../core/constants.dart';
 
 class BasicAppbar extends StatelessWidget implements PreferredSizeWidget {

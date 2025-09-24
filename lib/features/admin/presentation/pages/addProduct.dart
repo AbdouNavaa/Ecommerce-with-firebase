@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_with_firebase/core/configs/theme/app_colors.dart';
-import 'package:flutter_with_firebase/features/home/homePage.dart';
-import 'package:ionicons/ionicons.dart';
+import 'package:flutter_with_firebase/core/localization/app_localization.dart';
+import 'package:flutter_with_firebase/features/home/pages/homePage.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import '../../../../core/constants.dart';
+import '../../../../core/resources/app_strings.dart';
 import '../../../../models/product.dart';
 import '../../../../services/store.dart';
 import '../../../../widgets/custom_textfield.dart';
-import 'adminHome.dart';
 
 // Ajoute dans pubspec.yaml : url_launcher: ^6.2.5
 import 'package:url_launcher/url_launcher.dart';
@@ -80,7 +80,7 @@ class _AddProductState extends State<AddProduct> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Add Product',
+          context.tr(AppStrings.addProduct),
           style: TextStyle(
             color: isDark(context) ? Colors.white : Colors.black,
           ),
@@ -106,7 +106,7 @@ class _AddProductState extends State<AddProduct> {
               const Spacer(flex: 2),
               CustomTextField(
                 controller: _nameController,
-                hint: 'Product Name',
+                hint: context.tr(AppStrings.productName),
                 icon: LineAwesomeIcons.product_hunt,
                 keyboardType: TextInputType.text,
               ),
@@ -114,7 +114,7 @@ class _AddProductState extends State<AddProduct> {
 
               CustomTextField(
                 controller: _priceController,
-                hint: 'Price',
+                hint: context.tr(AppStrings.productPrice),
                 icon: Icons.attach_money,
                 keyboardType: TextInputType.number,
               ),
@@ -122,7 +122,7 @@ class _AddProductState extends State<AddProduct> {
 
               CustomTextField(
                 controller: _descriptionController,
-                hint: 'Description',
+                hint: context.tr(AppStrings.productDescription),
                 icon: Icons.description,
                 keyboardType: TextInputType.text,
               ),
@@ -130,7 +130,7 @@ class _AddProductState extends State<AddProduct> {
 
               CustomTextField(
                 controller: _categoryController,
-                hint: 'Category',
+                hint: context.tr(AppStrings.productCategory),
                 icon: Icons.category,
                 keyboardType: TextInputType.text,
               ),
@@ -146,8 +146,8 @@ class _AddProductState extends State<AddProduct> {
                     color: Colors.white,
                     size: 20,
                   ),
-                  label: const Text(
-                    'Shoose image from google',
+                  label: Text(
+                    context.tr(AppStrings.openBrowser),
                     style: TextStyle(fontSize: 18, color: Colors.white),
                   ),
                   style: ElevatedButton.styleFrom(
@@ -177,7 +177,7 @@ class _AddProductState extends State<AddProduct> {
               // Champ pour coller l'URL de l'image
               CustomTextField(
                 controller: _imageLocationController,
-                hint: 'Paste image URL',
+                hint: context.tr(AppStrings.imageUrl),
                 icon: Icons.image,
                 keyboardType: TextInputType.url,
               ),
@@ -194,8 +194,8 @@ class _AddProductState extends State<AddProduct> {
                   child:
                       _isLoading
                           ? const CircularProgressIndicator(color: Colors.white)
-                          : const Text(
-                            'Save',
+                          : Text(
+                            context.tr(AppStrings.save),
                             style: TextStyle(
                               fontSize: 18,
                               color: Colors.white,

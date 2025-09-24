@@ -1,13 +1,9 @@
-import 'package:flutter_with_firebase/features/admin/presentation/pages/admin_products.dart';
-import 'package:ionicons/ionicons.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:flutter_with_firebase/core/localization/app_localization.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../../../../common/navigator/app_navigator.dart';
 import '../../../../core/configs/theme/app_colors.dart';
 import '../../../../core/constants.dart';
+import '../../../../core/resources/app_strings.dart';
 import '../../../product/domain/entities/product.dart';
-import '../../../../models/product.dart';
 import '../../../../services/store.dart';
 import '../../../../widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
@@ -54,7 +50,7 @@ class _EditProductState extends State<EditProduct> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Produit ajouté avec succès'),
+          content: Text(context.tr(AppStrings.productEdited)),
           backgroundColor: kBnbColorAccentDark,
           duration: const Duration(seconds: 3),
         ),
@@ -71,7 +67,6 @@ class _EditProductState extends State<EditProduct> {
 
   @override
   Widget build(BuildContext context) {
-    double width_size = MediaQuery.of(context).size.width;
     ProductEntity product =
         ModalRoute.of(context)?.settings.arguments as ProductEntity;
     setState(() {
@@ -85,7 +80,7 @@ class _EditProductState extends State<EditProduct> {
       // backgroundColor: kBnbColorAccentDark,
       appBar: AppBar(
         title: Text(
-          'Edit Product',
+          context.tr(AppStrings.editProduct),
           style: TextStyle(
             color: isDark(context) ? Colors.white : Colors.black,
           ),
@@ -113,7 +108,7 @@ class _EditProductState extends State<EditProduct> {
 
               CustomTextField(
                 controller: _nameController,
-                hint: 'Product Name',
+                hint: context.tr(AppStrings.productName),
                 keyboardType: TextInputType.name,
                 icon: Icons.production_quantity_limits,
               ),
@@ -121,21 +116,21 @@ class _EditProductState extends State<EditProduct> {
               CustomTextField(
                 controller: _priceController,
                 keyboardType: TextInputType.number,
-                hint: 'Product Price',
+                hint: context.tr(AppStrings.productPrice),
                 icon: Icons.attach_money,
               ),
               const Spacer(),
               CustomTextField(
                 controller: _descriptionController,
                 keyboardType: TextInputType.text,
-                hint: 'Product Description',
+                hint: context.tr(AppStrings.productDescription),
                 icon: Icons.description,
               ),
               const Spacer(),
               CustomTextField(
                 controller: _categoryController,
                 keyboardType: TextInputType.name,
-                hint: 'Product Category',
+                hint: context.tr(AppStrings.productCategory),
                 icon: Icons.category,
               ),
               const Spacer(),
@@ -150,8 +145,8 @@ class _EditProductState extends State<EditProduct> {
                     color: Colors.white,
                     size: 20,
                   ),
-                  label: const Text(
-                    'Shoose image from google',
+                  label: Text(
+                    context.tr(AppStrings.openBrowser),
                     style: TextStyle(fontSize: 18, color: Colors.white),
                   ),
                   style: ElevatedButton.styleFrom(
@@ -167,8 +162,10 @@ class _EditProductState extends State<EditProduct> {
                       await launchUrl(url, mode: LaunchMode.platformDefault);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Impossible d\'ouvrir le navigateur'),
+                        SnackBar(
+                          content: Text(
+                            context.tr(AppStrings.errorOpenBrowser),
+                          ),
                         ),
                       );
                     }
@@ -198,8 +195,8 @@ class _EditProductState extends State<EditProduct> {
                   child:
                       _isLoading
                           ? const CircularProgressIndicator(color: Colors.white)
-                          : const Text(
-                            'Edit',
+                          : Text(
+                            context.tr(AppStrings.edit),
                             style: TextStyle(
                               fontSize: 18,
                               color: Colors.white,

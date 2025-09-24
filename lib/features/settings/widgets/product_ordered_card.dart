@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../../core/configs/theme/app_colors.dart';
 import '../../../core/constants.dart';
 import '../../order/domain/entities/product_ordered.dart';
+import 'package:flutter_with_firebase/core/localization/app_localization.dart';
+import '../../../core/resources/app_strings.dart';
 
 class OrderItemCard extends StatelessWidget {
   final ProductOrderedEntity productOrderedEntity;
@@ -74,7 +76,7 @@ class OrderItemCard extends StatelessWidget {
                           Text.rich(
                             overflow: TextOverflow.ellipsis,
                             TextSpan(
-                              text: 'Size - ',
+                              text: '${context.tr(AppStrings.size)} - ',
                               style: const TextStyle(
                                 color: Colors.grey,
                                 fontWeight: FontWeight.w500,
@@ -96,7 +98,7 @@ class OrderItemCard extends StatelessWidget {
                           Text.rich(
                             overflow: TextOverflow.ellipsis,
                             TextSpan(
-                              text: 'Color - ',
+                              text: '${context.tr(AppStrings.color)} - ',
                               style: const TextStyle(
                                 color: Colors.grey,
                                 fontWeight: FontWeight.w500,

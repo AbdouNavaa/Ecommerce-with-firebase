@@ -15,9 +15,20 @@ class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
   Future<DashboardStatsModel> getDashboardStats() async {
     try {
       // Compter les catégories
-      final categoriesSnapshot =
-          await FirebaseFirestore.instance.collection('categories').get();
-      final categoriesCount = categoriesSnapshot.docs.length;
+      // ...existing code...
+      
+      // Compter les catégories
+      final categoriesSnapshot = await FirebaseFirestore.instance
+          .collection('Products')
+          .get();
+      
+      final Set<String> uniqueCategories = categoriesSnapshot.docs
+          .map((doc) => doc.data()['productCategory'] as String)
+          .toSet();
+      
+      final categoriesCount = uniqueCategories.length;
+      
+      // ...existing code...
 
       // Compter les commandes
       final ordersSnapshot =

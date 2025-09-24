@@ -6,9 +6,11 @@ import '../../../../common/bloc/product/products_display_state.dart';
 import '../../../../common/widgets/appbar/app_bar.dart';
 import '../../../../common/widgets/product/product_card.dart';
 import '../../../../core/constants.dart';
+import '../../../../core/resources/app_strings.dart';
 import '../../../../service_locator.dart';
 import '../../domain/entities/product.dart';
 import '../../domain/usecases/get_favorties_products.dart';
+import 'package:flutter_with_firebase/core/localization/app_localization.dart';
 
 class MyFavoritesPage extends StatelessWidget {
   static String id = 'MyFavoritesPage';
@@ -20,7 +22,7 @@ class MyFavoritesPage extends StatelessWidget {
     return Scaffold(
       appBar: BasicAppbar(
         title: Text(
-          'My Favorites',
+          context.tr(AppStrings.myFavorites),
           style: TextStyle(
             color: isDark(context) ? Colors.white : Colors.black,
           ),
@@ -41,7 +43,7 @@ class MyFavoritesPage extends StatelessWidget {
             }
 
             if (state is LoadProductsFailure) {
-              return const Center(child: Text('Please try again'));
+              return Center(child: Text(context.tr(AppStrings.tryAgain)));
             }
 
             return Container();

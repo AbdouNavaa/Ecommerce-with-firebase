@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../common/navigator/app_navigator.dart';
 import '../../../core/configs/theme/app_colors.dart';
 import '../../product/presentation/pages/FavoritesScreen.dart';
+import 'package:flutter_with_firebase/core/localization/app_localization.dart';
+import '../../../core/resources/app_strings.dart';
 
 class MyFavortiesTile extends StatelessWidget {
   const MyFavortiesTile({super.key});
@@ -30,11 +32,11 @@ class MyFavortiesTile extends StatelessWidget {
             ),
           ],
         ),
-        child: const Row(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'My Favorites',
+              context.tr(AppStrings.myFavorites),
               style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16),
             ),
             Icon(Icons.arrow_forward_ios_rounded),

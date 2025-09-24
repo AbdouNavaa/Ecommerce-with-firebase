@@ -9,6 +9,8 @@ import '../../order/domain/entities/order.dart';
 import '../bloc/orders_display_cubit.dart';
 import '../bloc/orders_display_state.dart';
 import 'order_detail.dart';
+import 'package:flutter_with_firebase/core/localization/app_localization.dart';
+import '../../../core/resources/app_strings.dart';
 
 class MyOrdersPage extends StatelessWidget {
   const MyOrdersPage({super.key});
@@ -18,7 +20,7 @@ class MyOrdersPage extends StatelessWidget {
     return Scaffold(
       appBar: BasicAppbar(
         title: Text(
-          'My Orders',
+          context.tr(AppStrings.myOrders),
           style: TextStyle(
             color: isDark(context) ? Colors.white : Colors.black,
           ),
@@ -84,20 +86,44 @@ class MyOrdersPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Order #${orders[index].code}',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 16,
-                          ),
+                        Row(
+                          children: [
+                            Text(
+                              context.tr(AppStrings.order),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 16,
+                              ),
+                            ),
+                            const SizedBox(width: 5),
+                            Text(
+                              ' #${orders[index].code}',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          '${orders[index].products.length} item',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 12,
-                            color: Colors.grey,
-                          ),
+                        Row(
+                          children: [
+                            Text(
+                              '${orders[index].products.length} ',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 12,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            Text(
+                              context.tr(AppStrings.items),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 12,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),

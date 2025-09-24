@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_with_firebase/core/localization/app_localization.dart';
 
 import '../../../../core/constants/enums.dart';
 import '../../../../core/constants/models.dart';
+import '../../../../core/resources/app_strings.dart';
 
 class EmptyOrderView extends StatelessWidget {
   const EmptyOrderView({
@@ -17,7 +19,7 @@ class EmptyOrderView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tab = _orderStatusTabs.firstWhere((t) => t!.status == status);
+    final tab = _orderStatusTabs.firstWhere((t) => t.status == status);
 
     return Center(
       child: Column(
@@ -26,15 +28,15 @@ class EmptyOrderView extends StatelessWidget {
           Icon(tab.icon, size: 64, color: Theme.of(context).hintColor),
           const SizedBox(height: 16),
           Text(
-            'No orders ${tab.title.toLowerCase()} found',
+            context.tr(AppStrings.noOrdersFound),
             style: Theme.of(context).textTheme.headlineSmall,
           ),
-          const SizedBox(height: 8),
-          Text(
-            'The orders will appear here once they have this status.',
-            style: Theme.of(context).textTheme.bodyMedium,
-            textAlign: TextAlign.center,
-          ),
+          // const SizedBox(height: 8),
+          // Text(
+          //   'The orders will appear here once they have this status.',
+          //   style: Theme.of(context).textTheme.bodyMedium,
+          //   textAlign: TextAlign.center,
+          // ),
         ],
       ),
     );

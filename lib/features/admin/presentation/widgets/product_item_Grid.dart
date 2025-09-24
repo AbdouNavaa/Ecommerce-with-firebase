@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_with_firebase/core/constants.dart';
+import 'package:flutter_with_firebase/core/localization/app_localization.dart';
+import 'package:flutter_with_firebase/core/resources/app_strings.dart';
 import 'package:flutter_with_firebase/features/admin/presentation/pages/editProduct.dart';
 import '../../../../services/store.dart';
 import '../../../product/domain/entities/product.dart';
@@ -44,7 +47,7 @@ class ProductItemGrid extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          product.pCategory ?? 'Catégorie inconnue',
+          product.pCategory ?? context.tr(AppStrings.unknown),
           style: Theme.of(
             context,
           ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
@@ -53,7 +56,7 @@ class ProductItemGrid extends StatelessWidget {
         ),
         const SizedBox(height: 2),
         Text(
-          product.pName ?? 'Nom du produit',
+          product.pName ?? context.tr(AppStrings.productName),
           style: Theme.of(
             context,
           ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
@@ -72,7 +75,7 @@ class ProductItemGrid extends StatelessWidget {
       children: [
         Expanded(
           child: _actionButton(
-            label: 'Edit',
+            label: context.tr(AppStrings.edit),
             icon: Icons.edit_outlined,
             color: Colors.blue,
             onPressed: () => _navigateToEdit(context),
@@ -81,7 +84,7 @@ class ProductItemGrid extends StatelessWidget {
         const SizedBox(width: 4),
         Expanded(
           child: _actionButton(
-            label: 'Delete',
+            label: context.tr(AppStrings.delete),
             icon: Icons.delete_outline,
             color: Colors.red,
             onPressed: () => _showDeleteDialog(context),
@@ -159,6 +162,7 @@ class ProductItemGrid extends StatelessWidget {
             (_) => ProductInfo(
               arguments: product,
               color: AppColors.secondBackground,
+              isAdmin: true,
             ),
       ),
     );
@@ -167,24 +171,31 @@ class ProductItemGrid extends StatelessWidget {
   void _showDeleteDialog(BuildContext context) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder:
           (context) => AlertDialog(
-            title: const Text('Confirmer la suppression'),
-            content: Text(
-              'Êtes-vous sûr de vouloir supprimer "${product.pName}" ?',
+            backgroundColor: themeColors(
+              context,
+              AppColors.secondBackground,
+              Colors.white,
             ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(6),
+            ),
+            title: Text(context.tr(AppStrings.deleteProductConf)),
+            content: Text(context.tr(AppStrings.areYouSureDeleteProduct)),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Annuler'),
+                child: Text(context.tr(AppStrings.cancel)),
               ),
               TextButton(
                 onPressed: () async {
                   Navigator.pop(context);
                   await _deleteProduct();
                 },
-                child: const Text(
-                  'Supprimer',
+                child: Text(
+                  context.tr(AppStrings.delete),
                   style: TextStyle(color: Colors.red),
                 ),
               ),

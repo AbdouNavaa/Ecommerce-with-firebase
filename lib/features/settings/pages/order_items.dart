@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_with_firebase/core/localization/app_localization.dart';
 import '../../../core/constants.dart';
+import '../../../core/resources/app_strings.dart';
 import '../../order/domain/entities/product_ordered.dart';
 import '../widgets/product_ordered_card.dart';
 import '../../../common/widgets/appbar/app_bar.dart';
@@ -13,7 +15,7 @@ class OrderItemsPage extends StatelessWidget {
     return Scaffold(
       appBar: BasicAppbar(
         title: Text(
-          'Order Items',
+          context.tr(AppStrings.orderItems),
           style: TextStyle(
             color: isDark(context) ? Colors.white : Colors.black,
           ),

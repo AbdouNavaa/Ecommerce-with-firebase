@@ -27,7 +27,13 @@ class ProductCard extends StatelessWidget {
             ),
           );
         } catch (e) {
-          print('Error during navigation: $e');
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error navigating to product details.'),
+              behavior: SnackBarBehavior.floating,
+              duration: const Duration(seconds: 2),
+            ),
+          );
         }
       },
       child: Container(
@@ -84,6 +90,7 @@ class ProductCard extends StatelessWidget {
                               ? "${productEntity.pPrice}\$"
                               : "${productEntity.pPrice}\$",
                           style: const TextStyle(
+                            color: Colors.white,
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
                           ),
@@ -95,7 +102,7 @@ class ProductCard extends StatelessWidget {
                               : "${productEntity.pPrice}\$",
                           style: const TextStyle(
                             fontSize: 15,
-                            color: Colors.grey,
+                            color: Colors.white60,
                             fontWeight: FontWeight.w400,
                             decoration: TextDecoration.lineThrough,
                           ),

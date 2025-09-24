@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_with_firebase/core/localization/app_localization.dart';
 
 import '../../../../../../common/bloc/button/button_state.dart';
 import '../../../../common/bloc/button/button_state_cubit.dart';
@@ -8,11 +9,12 @@ import '../../../../common/navigator/app_navigator.dart';
 import '../../../../common/widgets/appbar/app_bar.dart';
 import '../../../../common/widgets/button/basic_reactive_button.dart';
 import '../../../../core/constants.dart';
+import '../../../../core/resources/app_strings.dart';
 import '../../../admin/presentation/pages/adminHome.dart';
 import '../../data/models/user_signin_req.dart';
 import '../../domain/usecases/signin.dart';
 import 'signup_screen.dart';
-import '../../../home/homePage.dart';
+import '../../../home/pages/homePage.dart';
 
 class SigninPage extends StatelessWidget {
   SigninPage({super.key});
@@ -60,15 +62,25 @@ class SigninPage extends StatelessWidget {
                   const SizedBox(height: 30),
                   _passwordField(context),
                   const SizedBox(height: 30),
-                  _forgotPasswordOrSignup(context, 'Forgot password? ', () {
-                    // AppNavigator.push(context, ForgotPasswordPage());
-                  }, 'Reset'),
+                  _forgotPasswordOrSignup(
+                    context,
+                    context.tr(AppStrings.forgotPassword),
+                    () {
+                      // AppNavigator.push(context, ForgotPasswordPage());
+                    },
+                    context.tr(AppStrings.reset),
+                  ),
                   const SizedBox(height: 40),
                   _continueButton(context),
                   const SizedBox(height: 30),
-                  _forgotPasswordOrSignup(context, 'Sign up', () {
-                    AppNavigator.push(context, SignupScreen());
-                  }, 'Create One'),
+                  _forgotPasswordOrSignup(
+                    context,
+                    context.tr(AppStrings.dontHaveAccount),
+                    () {
+                      AppNavigator.push(context, SignupScreen());
+                    },
+                    context.tr(AppStrings.createOne),
+                  ),
                 ],
               ),
             ),
@@ -79,8 +91,8 @@ class SigninPage extends StatelessWidget {
   }
 
   Widget _siginText(BuildContext context) {
-    return const Text(
-      'Sign in',
+    return Text(
+      context.tr(AppStrings.signIn),
       style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
     );
   }
@@ -88,8 +100,8 @@ class SigninPage extends StatelessWidget {
   Widget _emailField(BuildContext context) {
     return TextField(
       controller: _emailCon,
-      decoration: const InputDecoration(
-        hintText: 'Enter Email',
+      decoration: InputDecoration(
+        hintText: context.tr(AppStrings.enterEmail),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(8)),
           borderSide: BorderSide(color: Colors.black12, width: 1),
@@ -105,8 +117,9 @@ class SigninPage extends StatelessWidget {
   Widget _passwordField(BuildContext context) {
     return TextField(
       controller: _passwordCon,
-      decoration: const InputDecoration(
-        hintText: 'Enter Password',
+      obscureText: true,
+      decoration: InputDecoration(
+        hintText: context.tr(AppStrings.enterPassword),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(8)),
           borderSide: BorderSide(color: Colors.black12, width: 1),
@@ -132,7 +145,7 @@ class SigninPage extends StatelessWidget {
               ),
             );
           },
-          title: 'Sign in',
+          title: context.tr(AppStrings.signIn),
         );
       },
     );

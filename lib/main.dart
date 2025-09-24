@@ -1,9 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_with_firebase/features/auth/presentation/pages/signup_screen.dart';
-import 'package:flutter_with_firebase/features/home/homePage.dart';
+import 'package:flutter_with_firebase/features/home/pages/homePage.dart';
 import 'package:flutter_with_firebase/features/product/presentation/pages/FavoritesScreen.dart';
 import 'package:flutter_with_firebase/features/search/pages/search.dart';
 import 'package:flutter_with_firebase/features/admin/presentation/pages/addProduct.dart';
@@ -16,12 +18,20 @@ import 'core/firebase_options.dart';
 import 'core/localization/app_localization.dart';
 import 'features/product/domain/usecases/get_products.dart';
 import 'features/product/presentation/cubit/get_porducts_cubit.dart';
+import 'features/splash/splash.dart';
 import 'service_locator.dart';
+import 'package:device_preview/device_preview.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await initializeDependencies();
+  // runApp(
+  //   DevicePreview(
+  //     enabled: !kReleaseMode,
+  //     builder: (context) => MyApp(), // Wrap your app
+  //   ),
+  // );
   runApp(const MyApp());
 }
 
@@ -77,40 +87,43 @@ class _MyAppState extends State<MyApp> {
       ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(
         builder: (context, themeMode) {
-          return MaterialApp(
-            // themeMode: ThemeMode.system,
-            locale: _locale,
-            supportedLocales: const [Locale('en', ''), Locale('ar', '')],
-            localizationsDelegates: [
-              AppLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            localeResolutionCallback: (locale, supportedLocales) {
-              if (locale == null) return supportedLocales.first;
-              for (var supportedLocale in supportedLocales) {
-                if (supportedLocale.languageCode == locale.languageCode) {
-                  return supportedLocale;
+          return ScreenUtilInit(
+            designSize: const Size(360, 690),
+            child: MaterialApp(
+              // themeMode: ThemeMode.system,
+              locale: _locale,
+              supportedLocales: [Locale('en', ''), Locale('ar', '')],
+              localizationsDelegates: [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              localeResolutionCallback: (locale, supportedLocales) {
+                if (locale == null) return supportedLocales.first;
+                for (var supportedLocale in supportedLocales) {
+                  if (supportedLocale.languageCode == locale.languageCode) {
+                    return supportedLocale;
+                  }
                 }
-              }
-              return supportedLocales.first;
-            },
-            themeMode: themeMode,
-            theme: AppTheme.appThemeLight,
-            darkTheme: AppTheme.appThemeDark,
-            debugShowCheckedModeBanner: false,
-            // home: AdminHome(),
-            home: HomePage(),
-            routes: {
-              MyFavoritesPage.id: (context) => MyFavoritesPage(),
-              EditProduct.id: (context) => EditProduct(),
-              SearchPage.id: (context) => SearchPage(),
-              SignupScreen.id: (context) => SignupScreen(),
-              HomePage.id: (context) => HomePage(),
-              AdminHome.id: (context) => AdminHome(),
-              AddProduct.id: (context) => AddProduct(),
-            },
+                return supportedLocales.first;
+              },
+              themeMode: themeMode,
+              theme: AppTheme.appThemeLight,
+              darkTheme: AppTheme.appThemeDark,
+              debugShowCheckedModeBanner: false,
+              home: AdminHome(),
+              // home: SplashScreen(),
+              routes: {
+                MyFavoritesPage.id: (context) => MyFavoritesPage(),
+                EditProduct.id: (context) => EditProduct(),
+                SearchPage.id: (context) => SearchPage(),
+                SignupScreen.id: (context) => SignupScreen(),
+                HomePage.id: (context) => HomePage(),
+                AdminHome.id: (context) => AdminHome(),
+                AddProduct.id: (context) => AddProduct(),
+              },
+            ),
           );
         },
       ),

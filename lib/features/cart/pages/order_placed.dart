@@ -5,7 +5,9 @@ import '../../../common/widgets/button/basic_app_button.dart';
 import '../../../core/configs/assets/app_images.dart';
 import '../../../core/configs/theme/app_colors.dart';
 import '../../../core/constants.dart';
-import '../../home/homePage.dart';
+import '../../home/pages/homePage.dart';
+import 'package:flutter_with_firebase/core/localization/app_localization.dart';
+import '../../../core/resources/app_strings.dart';
 
 class OrderPlacedPage extends StatelessWidget {
   const OrderPlacedPage({super.key});
@@ -38,7 +40,7 @@ class OrderPlacedPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Order Placed Successfully',
+                    context.tr(AppStrings.orderPlaced),
                     style: TextStyle(
                       color: themeColors(
                         context,
@@ -51,7 +53,7 @@ class OrderPlacedPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 30),
                   BasicAppButton(
-                    title: 'Finish',
+                    title: context.tr(AppStrings.finish),
                     onPressed: () {
                       AppNavigator.pushAndRemove(context, HomePage());
                     },

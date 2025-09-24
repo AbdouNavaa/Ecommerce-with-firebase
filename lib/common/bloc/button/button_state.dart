@@ -1,5 +1,3 @@
-import '../../../features/auth/domain/entity/user.dart';
-
 abstract class ButtonState {}
 
 class ButtonInitialState extends ButtonState {}

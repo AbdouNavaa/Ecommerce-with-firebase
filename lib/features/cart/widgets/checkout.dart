@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_with_firebase/core/localization/app_localization.dart';
 
 import '../../../common/helper/cart/cart.dart';
 import '../../../common/navigator/app_navigator.dart';
 import '../../../common/widgets/button/basic_app_button.dart';
 import '../../../core/configs/theme/app_colors.dart';
+import '../../../core/resources/app_strings.dart';
 import '../../order/domain/entities/product_ordered.dart';
 import '../pages/checkout.dart';
 
@@ -40,8 +42,8 @@ class Checkout extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Subtotal',
+              Text(
+                context.tr(AppStrings.subtotal),
                 style: TextStyle(color: Colors.grey, fontSize: 16),
               ),
               Text(
@@ -53,11 +55,11 @@ class Checkout extends StatelessWidget {
               ),
             ],
           ),
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Shipping Cost',
+                context.tr(AppStrings.deliveryFee),
                 style: TextStyle(color: Colors.grey, fontSize: 16),
               ),
               Text(
@@ -66,10 +68,13 @@ class Checkout extends StatelessWidget {
               ),
             ],
           ),
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Tax', style: TextStyle(color: Colors.grey, fontSize: 16)),
+              Text(
+                context.tr(AppStrings.tax),
+                style: TextStyle(color: Colors.grey, fontSize: 16),
+              ),
               Text(
                 '\$0.0',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
@@ -79,8 +84,8 @@ class Checkout extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Total',
+              Text(
+                context.tr(AppStrings.total),
                 style: TextStyle(color: Colors.grey, fontSize: 16),
               ),
               Text(
@@ -96,7 +101,7 @@ class Checkout extends StatelessWidget {
             onPressed: () {
               AppNavigator.push(context, CheckOutPage(products: products));
             },
-            title: 'Checkout',
+            title: context.tr(AppStrings.checkout),
           ),
         ],
       ),

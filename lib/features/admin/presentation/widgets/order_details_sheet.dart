@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_with_firebase/core/configs/theme/app_colors.dart';
+import 'package:flutter_with_firebase/core/constants.dart';
 import 'package:flutter_with_firebase/core/localization/app_localization.dart';
 
 import '../../../../common/helper/navigator/app_navigator.dart';
@@ -44,6 +46,7 @@ class _OrderDetailsSheetState extends State<OrderDetailsSheet> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final order = widget.order;
+    // print('Orders:  ${widget.order}');
 
     return Container(
       height: MediaQuery.of(context).size.height * 0.85,
@@ -264,7 +267,7 @@ class _OrderDetailsSheetState extends State<OrderDetailsSheet> {
           OrderTimeline(order: order),
           const SizedBox(height: 24),
           Text(
-            'Order Status Change',
+            context.tr(AppStrings.updateStatus),
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w600,
             ),
@@ -346,7 +349,7 @@ class _OrderDetailsSheetState extends State<OrderDetailsSheet> {
           child: _buildActionButton(
             label: context.tr(AppStrings.delete),
             icon: Icons.delete_outline,
-            color: Colors.red.shade400,
+            color: Colors.red.shade500,
             onPressed:
                 _isLoading
                     ? null
@@ -411,7 +414,7 @@ class _OrderDetailsSheetState extends State<OrderDetailsSheet> {
       if (mounted) {
         _showSnackBar(
           context,
-          ' An error occurred while updating the order status.',
+          context.tr(AppStrings.errorUpdatingStatus),
           isError: true,
         );
       }
@@ -428,7 +431,11 @@ class _OrderDetailsSheetState extends State<OrderDetailsSheet> {
       await sl<DeleteOrderUseCase>()(params: order.code);
 
       if (!mounted) return;
-      _showSnackBar(context, 'Order deleted', isError: false);
+      _showSnackBar(
+        context,
+        context.tr(AppStrings.orderDeleted),
+        isError: false,
+      );
       Navigator.pop(context);
       // context.read<OrdersDisplayCubit>().displayOrders();
     } catch (e) {
@@ -451,20 +458,29 @@ class _OrderDetailsSheetState extends State<OrderDetailsSheet> {
       context: context,
       builder:
           (context) => AlertDialog(
-            title: const Text(' Delete Order Confirmation'),
-            content: Text(
-              'Are you sure you want to delete order #${order.code} ?',
+            backgroundColor: themeColors(
+              context,
+              AppColors.secondBackground,
+              Colors.white,
+            ),
+            shape: BeveledRectangleBorder(
+              borderRadius: BorderRadius.circular(1),
+            ),
+            title: Text(context.tr(AppStrings.deleteOrderConf)),
+            content: Container(
+              padding: const EdgeInsets.all(16),
+              child: Text('${context.tr(AppStrings.areYouSureDeleteOrder)} '),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context, false),
-                child: const Text('Cancel'),
+                child: Text(context.tr(AppStrings.cancel)),
               ),
               ElevatedButton(
                 onPressed: () => _deletOrder(context, order),
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                child: const Text(
-                  'Delete',
+                child: Text(
+                  context.tr(AppStrings.delete),
                   style: TextStyle(color: Colors.white),
                 ),
               ),
@@ -474,7 +490,11 @@ class _OrderDetailsSheetState extends State<OrderDetailsSheet> {
 
     if (confirmed == true) {
       // Implémentez ici la logique de suppression
-      _showSnackBar(context, 'Order deleted', isError: false);
+      _showSnackBar(
+        context,
+        context.tr(AppStrings.orderDeleted),
+        isError: false,
+      );
       Navigator.pop(context);
       context.read<OrdersDisplayCubit>().displayOrders();
     }

@@ -26,105 +26,168 @@ class LengthsView extends StatelessWidget {
 
   const LengthsView({super.key, required this.size});
 
+  List<Map<String, dynamic>> _getStatsItems(
+    BuildContext context,
+    dynamic stats,
+  ) {
+    return [
+      {
+        'count': stats.productsCount,
+        'label': context.tr(AppStrings.products),
+        'icon': Icons.inventory_2_rounded,
+        'colors': [const Color(0xFF6366F1), const Color(0xFF8B5CF6)],
+      },
+      {
+        'count': stats.categoriesCount,
+        'label': context.tr(AppStrings.categories),
+        'icon': Icons.category_rounded,
+        'colors': [const Color(0xFF10B981), const Color(0xFF059669)],
+      },
+      {
+        'count': stats.ordersCount,
+        'label': context.tr(AppStrings.orders),
+        'icon': Icons.shopping_bag_rounded,
+        'colors': [const Color(0xFFEF4444), const Color(0xFFDC2626)],
+      },
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = isDark(context);
+
     return Container(
-      height: size * 0.1,
-      width: double.infinity,
-      // margin: const EdgeInsets.symmetric(horizontal: 16),
+      height: size * 0.315,
+      margin: const EdgeInsets.symmetric(horizontal: 20),
       child: BlocBuilder<DashboardCubit, DashboardState>(
         builder: (context, state) {
           if (state is DashboardLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return _buildLoadingState();
           }
-
           if (state is DashboardError) {
-            return Center(
-              child: Text(
-                'Erreur: ${state.message}',
-                style: TextStyle(color: Colors.red, fontSize: 14),
-              ),
-            );
+            return _buildErrorState(state.message);
           }
-
           if (state is DashboardLoaded) {
-            final stats = state.stats;
-            final items = [
-              {
-                'count': stats.productsCount,
-                'label': context.tr(AppStrings.products),
-              },
-              {
-                'count': stats.categoriesCount,
-                'label': context.tr(AppStrings.categories),
-              },
-              {
-                'count': stats.ordersCount,
-                'label': context.tr(AppStrings.orders),
-              },
-            ];
+            return _buildStatsCards(context, state, isDarkMode);
+          }
+          return const SizedBox.shrink();
+        },
+      ),
+    );
+  }
 
-            return ListView.builder(
-              itemCount: items.length,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              itemExtent: size * 0.135,
-              itemBuilder: (context, index) {
-                final item = items[index];
-                return Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
-                  decoration: BoxDecoration(
-                    color: isDark(context) ? Colors.black : Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color:
-                            isDark(context)
-                                ? Colors.grey.shade900
-                                : Colors.grey.shade200,
-                        spreadRadius: 1,
-                        blurRadius: 5,
-                        offset: const Offset(0, 3),
+  Widget _buildLoadingState() {
+    return const Center(child: CircularProgressIndicator());
+  }
+
+  Widget _buildErrorState(String message) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.error_outline, color: Colors.red, size: 32),
+          const SizedBox(height: 8),
+          Text(
+            'Error loading stats',
+            style: TextStyle(color: Colors.red.shade700, fontSize: 14),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatsCards(
+    BuildContext context,
+    DashboardLoaded state,
+    bool isDarkMode,
+  ) {
+    final items = _getStatsItems(context, state.stats);
+
+    return Row(
+      children:
+          items
+              .map(
+                (item) => Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors:
+                            isDarkMode
+                                ? [
+                                  const Color(0xFF1E293B),
+                                  const Color(0xFF334155),
+                                ]
+                                : [Colors.white, const Color(0xFFF8FAFC)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
-                    ],
-                  ),
-                  child: InkWell(
-                    onTap: () {
-                      // Navigation logic here
-                    },
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(
+                            isDarkMode ? 0.3 : 0.1,
+                          ),
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          '${item['count']}',
-                          style: TextStyle(
-                            color:
-                                isDark(context) ? Colors.white : Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(colors: item['colors']),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(
+                            item['icon'],
+                            color: Colors.white,
+                            size: 20,
                           ),
                         ),
+                        const SizedBox(height: 8),
+                        TweenAnimationBuilder<int>(
+                          tween: IntTween(begin: 0, end: item['count']),
+                          duration: const Duration(milliseconds: 1000),
+                          builder: (context, value, child) {
+                            return Text(
+                              '$value',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color:
+                                    isDarkMode
+                                        ? Colors.white
+                                        : Colors.grey[900],
+                              ),
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 4),
                         Text(
-                          '${item['label']}',
+                          item['label'],
                           style: TextStyle(
+                            fontSize: 12,
                             color:
-                                isDark(context) ? Colors.white : Colors.black,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
+                                isDarkMode
+                                    ? Colors.grey[400]
+                                    : Colors.grey[600],
                           ),
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ],
                     ),
                   ),
-                );
-              },
-            );
-          }
-
-          return const SizedBox.shrink();
-        },
-      ),
+                ),
+              )
+              .toList(),
     );
   }
 }

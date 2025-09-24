@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_with_firebase/core/configs/theme/app_colors.dart';
+import 'package:flutter_with_firebase/core/localization/app_localization.dart';
 
 import '../../../../common/bloc/button/button_state.dart';
 import '../../../../common/bloc/button/button_state_cubit.dart';
 import '../../../../common/helper/product/product_price.dart';
 import '../../../../common/widgets/button/basic_reactive_button.dart';
+import '../../../../core/resources/app_strings.dart';
 import '../../../order/data/models/add_to_cart_req.dart';
 import '../../../order/domain/usecases/add_to_cart.dart';
 import '../../domain/entities/product.dart';
@@ -23,7 +25,7 @@ class AddToBag extends StatelessWidget {
         if (state is ButtonSuccessState) {
           // AppNavigator.push(context, const CartPage());
           var snackbar = SnackBar(
-            content: Text(state.successMessage!),
+            content: Text(context.tr(AppStrings.addToBag)),
             behavior: SnackBarBehavior.floating,
             duration: const Duration(seconds: 2),
           );
@@ -80,8 +82,8 @@ class AddToBag extends StatelessWidget {
                     );
                   },
                 ),
-                const Text(
-                  'Add to Bag',
+                Text(
+                  context.tr(AppStrings.addToBag),
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
                     color: Colors.white,

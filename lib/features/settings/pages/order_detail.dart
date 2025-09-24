@@ -4,7 +4,8 @@ import '../../../core/configs/theme/app_colors.dart';
 import '../../../core/constants.dart';
 import '../../order/domain/entities/order.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_with_firebase/core/localization/app_localization.dart';
+import '../../../core/resources/app_strings.dart';
 import 'order_items.dart';
 
 class OrderDetailPage extends StatelessWidget {
@@ -15,11 +16,22 @@ class OrderDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: BasicAppbar(
-        title: Text(
-          'Order #${orderEntity.code}',
-          style: TextStyle(
-            color: isDark(context) ? Colors.white : Colors.black,
-          ),
+        title: Row(
+          children: [
+            Text(
+              context.tr(AppStrings.orders),
+              style: TextStyle(
+                color: isDark(context) ? Colors.white : Colors.black,
+              ),
+            ),
+            const SizedBox(width: 10),
+            Text(
+              '#${orderEntity.code}',
+              style: TextStyle(
+                color: isDark(context) ? Colors.white : Colors.black,
+              ),
+            ),
+          ],
         ),
       ),
       body: SingleChildScrollView(
@@ -114,8 +126,8 @@ class OrderDetailPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Order Items',
+        Text(
+          context.tr(AppStrings.orderItems),
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
         const SizedBox(height: 15),
@@ -151,7 +163,14 @@ class OrderDetailPage extends StatelessWidget {
                     const Icon(Icons.receipt_rounded),
                     const SizedBox(width: 20),
                     Text(
-                      '${orderEntity.products.length} Items',
+                      '${orderEntity.products.length}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Text(
+                      context.tr(AppStrings.items),
                       style: const TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize: 16,
@@ -159,8 +178,8 @@ class OrderDetailPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                const Text(
-                  'View All',
+                Text(
+                  context.tr(AppStrings.viewAllOrders),
                   style: TextStyle(
                     fontWeight: FontWeight.w400,
                     fontSize: 14,
@@ -179,8 +198,8 @@ class OrderDetailPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Shipping details',
+        Text(
+          context.tr(AppStrings.shippingDetails),
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
         const SizedBox(height: 15),

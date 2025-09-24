@@ -6,19 +6,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../common/bloc/button/button_state_cubit.dart';
 import '../../../common/helper/cart/cart.dart';
 import '../../../common/widgets/button/basic_reactive_button.dart';
-import '../../../service_locator.dart';
 import '../../order/data/models/order_registration_req.dart';
 import '../../order/data/models/order_status.dart';
 import '../../order/domain/entities/product_ordered.dart';
-import '../../order/domain/usecases/get_cart_products.dart';
 import '../../order/domain/usecases/order_registration.dart';
-import '../../order/domain/usecases/remove_cart_product.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../common/bloc/button/button_state.dart';
 import '../../../common/helper/navigator/app_navigator.dart';
 import '../../../common/widgets/appbar/app_bar.dart';
 import 'order_placed.dart';
+import 'package:flutter_with_firebase/core/localization/app_localization.dart';
+import '../../../core/resources/app_strings.dart';
 
 class CheckOutPage extends StatelessWidget {
   final List<ProductOrderedEntity> products;
@@ -29,12 +27,11 @@ class CheckOutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const BasicAppbar(title: Text('Checkout')),
+      appBar: BasicAppbar(title: Text(context.tr(AppStrings.checkout))),
       body: BlocProvider(
         create: (context) => ButtonStateCubit(),
         child: BlocListener<ButtonStateCubit, ButtonState>(
           listener: (context, state) {
-            print(' State: $state');
             if (state is ButtonSuccessState) {
               var snackbar = SnackBar(
                 content: Text(state.successMessage!),
@@ -75,8 +72,8 @@ class CheckOutPage extends StatelessWidget {
                                 fontSize: 16,
                               ),
                             ),
-                            const Text(
-                              'Place Order',
+                            Text(
+                              context.tr(AppStrings.placed),
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w400,
@@ -134,8 +131,8 @@ class CheckOutPage extends StatelessWidget {
                           );
                         } else {
                           var snackbar = SnackBar(
-                            content: const Text(
-                              'Please enter shipping address',
+                            content: Text(
+                              context.tr(AppStrings.enterShippingAddress),
                             ),
                             behavior: SnackBarBehavior.floating,
                           );
@@ -167,7 +164,9 @@ class CheckOutPage extends StatelessWidget {
       controller: _addressCon,
       minLines: 2,
       maxLines: 4,
-      decoration: const InputDecoration(hintText: 'Shipping Address'),
+      decoration: InputDecoration(
+        hintText: context.tr(AppStrings.addressShipping),
+      ),
     );
   }
 }

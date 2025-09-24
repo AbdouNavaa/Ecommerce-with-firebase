@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_with_firebase/core/localization/app_localization.dart';
 import 'package:flutter_with_firebase/features/admin/presentation/pages/editProduct.dart';
+import '../../../../core/resources/app_strings.dart';
 import '../../../../services/store.dart';
 import '../../../product/domain/entities/product.dart';
 import '../../../product/presentation/pages/productInfo.dart';
 import '../../../../core/configs/theme/app_colors.dart';
+import 'package:flutter_with_firebase/core/constants.dart';
 
 class ProductItemList extends StatelessWidget {
   final ProductEntity product;
@@ -41,14 +44,14 @@ class ProductItemList extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          product.pCategory ?? 'Catégorie inconnue',
+          product.pCategory ?? context.tr(AppStrings.unknown),
           style: Theme.of(
             context,
           ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
         ),
         const SizedBox(height: 4),
         Text(
-          product.pName ?? 'Nom du produit',
+          product.pName ?? context.tr(AppStrings.productName),
           style: Theme.of(
             context,
           ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
@@ -65,14 +68,14 @@ class ProductItemList extends StatelessWidget {
     return Row(
       children: [
         _actionButton(
-          label: 'Modifier',
+          label: context.tr(AppStrings.edit),
           icon: Icons.edit_outlined,
           color: Colors.blue,
           onPressed: () => _navigateToEdit(context),
         ),
         const SizedBox(width: 8),
         _actionButton(
-          label: 'Supprimer',
+          label: context.tr(AppStrings.delete),
           icon: Icons.delete_outline,
           color: Colors.red,
           onPressed: () => _showDeleteDialog(context),
@@ -151,6 +154,7 @@ class ProductItemList extends StatelessWidget {
             (_) => ProductInfo(
               arguments: product,
               color: AppColors.secondBackground,
+              isAdmin: true,
             ),
       ),
     );
@@ -159,24 +163,31 @@ class ProductItemList extends StatelessWidget {
   void _showDeleteDialog(BuildContext context) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder:
           (context) => AlertDialog(
-            title: const Text('Confirmer la suppression'),
-            content: Text(
-              'Êtes-vous sûr de vouloir supprimer "${product.pName}" ?',
+            backgroundColor: themeColors(
+              context,
+              AppColors.secondBackground,
+              Colors.white,
             ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(6),
+            ),
+            title: Text(context.tr(AppStrings.deleteProductConf)),
+            content: Text(context.tr(AppStrings.areYouSureDeleteProduct)),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Annuler'),
+                child: Text(context.tr(AppStrings.cancel)),
               ),
               TextButton(
                 onPressed: () async {
                   Navigator.pop(context);
                   await _deleteProduct();
                 },
-                child: const Text(
-                  'Supprimer',
+                child: Text(
+                  context.tr(AppStrings.delete),
                   style: TextStyle(color: Colors.red),
                 ),
               ),

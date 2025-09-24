@@ -1,13 +1,15 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_with_firebase/common/bloc/button/button_state_cubit.dart';
 import 'package:flutter_with_firebase/core/constants.dart';
+import 'package:flutter_with_firebase/core/localization/app_localization.dart';
 import '../../../../common/bloc/button/button_state.dart';
 import '../../../../common/navigator/app_navigator.dart';
 import '../../../../common/widgets/appbar/app_bar.dart';
 import '../../../../common/widgets/button/basic_reactive_button.dart';
+import '../../../../core/resources/app_strings.dart';
 import '../../data/models/user_creation_req.dart';
 import '../../domain/usecases/siginup.dart';
-import '../../../home/homePage.dart';
+import '../../../home/pages/homePage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -31,7 +33,7 @@ class SignupScreen extends StatelessWidget {
         child: BlocListener<ButtonStateCubit, ButtonState>(
           listener: (context, state) {
             if (state is ButtonFailureState) {
-              print('###############${state.errorMessage}');
+              // print('###############${state.errorMessage}');
               var snackbar = SnackBar(
                 content: Text(
                   state.errorMessage,
@@ -53,18 +55,34 @@ class SignupScreen extends StatelessWidget {
               children: [
                 const SizedBox(height: 20),
                 // CustomLogo(),
-                const Text(
-                  'Sign up',
+                Text(
+                  context.tr(AppStrings.signUp),
                   style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 50),
-                _textField(context, _firstNameCon, 'Enter First Name'),
+                _textField(
+                  context,
+                  _firstNameCon,
+                  context.tr(AppStrings.enterFirstName),
+                ),
                 const SizedBox(height: 30),
-                _textField(context, _lastNameCon, 'Enter Last Name'),
+                _textField(
+                  context,
+                  _lastNameCon,
+                  context.tr(AppStrings.enterLastName),
+                ),
                 const SizedBox(height: 30),
-                _textField(context, _emailCon, 'Enter Email'),
+                _textField(
+                  context,
+                  _emailCon,
+                  context.tr(AppStrings.enterEmail),
+                ),
                 const SizedBox(height: 30),
-                _textField(context, _passwordCon, 'Enter Password'),
+                _textField(
+                  context,
+                  _passwordCon,
+                  context.tr(AppStrings.enterPassword),
+                ),
                 const SizedBox(height: 30),
                 _finishButton(
                   context,
@@ -99,7 +117,7 @@ class SignupScreen extends StatelessWidget {
     String email,
     String password,
   ) {
-    return Container(
+    return SizedBox(
       height: 100,
       // color: AppColors.secondBackground,
       // padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -108,11 +126,6 @@ class SignupScreen extends StatelessWidget {
           builder: (context) {
             return BasicReactiveButton(
               onPressed: () {
-                print('-------Email: ${_emailCon.text}-----------');
-                print('-------First Name: ${_firstNameCon.text}-----------');
-                print('-------Last Name: ${_lastNameCon.text}-----------');
-                print('-------Password: ${_passwordCon.text}-----------');
-
                 context.read<ButtonStateCubit>().execute(
                   usecase: SignupUseCase(),
                   params: UserCreationReq(
@@ -123,7 +136,7 @@ class SignupScreen extends StatelessWidget {
                   ),
                 );
               },
-              title: 'Finish',
+              title: context.tr(AppStrings.finish),
             );
           },
         ),

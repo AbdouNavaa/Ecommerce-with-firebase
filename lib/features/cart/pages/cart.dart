@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_with_firebase/core/localization/app_localization.dart';
+import 'package:flutter_with_firebase/core/resources/app_strings.dart';
 
 import '../../../common/widgets/appbar/app_bar.dart';
 import '../../../core/configs/assets/app_vectors.dart';
@@ -24,7 +26,7 @@ class _CartPageState extends State<CartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const BasicAppbar(title: Text('Cart')),
+      appBar: BasicAppbar(title: Text(context.tr(AppStrings.cart))),
       body: BlocProvider(
         create: (context) => CartProductsDisplayCubit()..displayCartProducts(),
         child: BlocBuilder<CartProductsDisplayCubit, CartProductsDisplayState>(
@@ -82,8 +84,8 @@ class _CartPageState extends State<CartPage> {
       children: [
         SvgPicture.asset(AppVectors.cartBag),
         const SizedBox(height: 20),
-        const Text(
-          "Cart is empty",
+        Text(
+          context.tr(AppStrings.cartEmpty),
           textAlign: TextAlign.center,
           style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
         ),

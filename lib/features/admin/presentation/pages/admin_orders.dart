@@ -7,7 +7,6 @@ import '../../../../core/constants.dart';
 import '../../../../core/constants/enums.dart';
 import '../../../../core/constants/models.dart';
 import '../../../../core/resources/app_strings.dart';
-import '../../../../widgets/custom_bottom_nav.dart';
 import '../../../settings/bloc/orders_display_cubit.dart';
 import '../../../settings/bloc/orders_display_state.dart';
 import '../widgets/empty_order_view.dart';

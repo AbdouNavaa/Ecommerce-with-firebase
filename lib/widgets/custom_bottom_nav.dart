@@ -6,7 +6,7 @@ import 'package:ionicons/ionicons.dart';
 
 import 'package:flutter_with_firebase/features/admin/presentation/pages/addProduct.dart';
 import 'package:flutter_with_firebase/features/product/presentation/pages/FavoritesScreen.dart';
-import 'package:flutter_with_firebase/features/home/homePage.dart';
+import 'package:flutter_with_firebase/features/home/pages/homePage.dart';
 import 'package:flutter_with_firebase/features/cart/pages/cart.dart';
 import 'package:flutter_with_firebase/features/profile/presentation/profile_page.dart';
 import 'package:flutter_with_firebase/features/search/pages/search.dart';
