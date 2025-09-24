@@ -72,8 +72,8 @@ Follow these steps to get your copy of the project up and running on your local 
 
 1.  **Clone the Repository**
     ```bash
-    git clone [Your Repository URL Here]
-    cd ecommerce_flutter_firebase
+    git clone https://github.com/AbdouNavaa/Ecommerce-with-firebase/
+    cd flutter_with_firebase
     ```
 
 2.  **Install Dependencies**
@@ -113,3 +113,4 @@ This project is licensed under the MIT License - see the `LICENSE` file for deta
 
 * **Developer:** https://github.com/AbdouNavaa/
 * **Project Link:** https://github.com/AbdouNavaa/Ecommerce-with-firebase/
+
